@@ -24,6 +24,18 @@ body {
   align-items: center;
   justify-content: center;
 }
+h1 {
+  text-align: left;
+  background-color: transparent;
+  font-family: "Monoton";
+  font-size: 5.5rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  word-spacing: 30px;
+  letter-spacing: -5px;
+  padding: 2.4rem 0;
+  margin-bottom: 1.2rem;
+}
 
 .app {
   min-height: 66vh;

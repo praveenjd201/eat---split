@@ -1,25 +1,6 @@
 import { useState } from "react";
 
-const initialFriends = [
-  {
-    id: 118836,
-    name: "Clark",
-    image: "https://i.pravatar.cc/48?u=118836",
-    balance: -7,
-  },
-  {
-    id: 933372,
-    name: "Sarah",
-    image: "https://i.pravatar.cc/48?u=933372",
-    balance: 20,
-  },
-  {
-    id: 499476,
-    name: "Anthony",
-    image: "https://i.pravatar.cc/48?u=499476",
-    balance: 0,
-  },
-];
+const initialFriends = [];
 
 function App() {
   const [showAddFriend, setshowAddFriend] = useState(false);
@@ -53,33 +34,47 @@ function App() {
     );
     setSelectedFriend("");
   }
+
+  function handleDeleteFriend(friendID) {
+    setFriends((friends) => friends.filter((friend) => friend.id !== friendID));
+  }
+  console.log(friends);
   // console.log(selectedFriend);
   return (
-    <div className="app">
-      <div className="sidebar">
-        <FriendList
-          friends={friends}
-          onSelectedFriend={handleSelectedFriend}
-          selectedFriend={selectedFriend}
-        />
-        {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
+    <>
+      <h1>🍕 Eat-&-split 🍴</h1>
+      <div className="app">
+        <div className="sidebar">
+          <FriendList
+            friends={friends}
+            onSelectedFriend={handleSelectedFriend}
+            selectedFriend={selectedFriend}
+            onDeleteFriend={handleDeleteFriend}
+          />
+          {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
-        <Button className="button" onClick={handleShowAddFriend}>
-          {showAddFriend ? "Close" : "Add Friend"}
-        </Button>
+          <Button className="button" onClick={handleShowAddFriend}>
+            {showAddFriend ? "Close" : "Add Friend"}
+          </Button>
+        </div>
+
+        {selectedFriend && (
+          <FormSplitBill
+            selectedFriend={selectedFriend}
+            onUpdateSplitBalance={handleUpdateSplitBalance}
+          />
+        )}
       </div>
-
-      {selectedFriend && (
-        <FormSplitBill
-          selectedFriend={selectedFriend}
-          onUpdateSplitBalance={handleUpdateSplitBalance}
-        />
-      )}
-    </div>
+    </>
   );
 }
 
-function FriendList({ friends, onSelectedFriend, selectedFriend }) {
+function FriendList({
+  friends,
+  onSelectedFriend,
+  selectedFriend,
+  onDeleteFriend,
+}) {
   return (
     <ul>
       {friends.map((friend) => (
@@ -88,12 +83,13 @@ function FriendList({ friends, onSelectedFriend, selectedFriend }) {
           key={friend.id}
           onSelectedFriend={onSelectedFriend}
           selectedFriend={selectedFriend}
+          onDeleteFriend={onDeleteFriend}
         />
       ))}
     </ul>
   );
 }
-function Friend({ friend, onSelectedFriend, selectedFriend }) {
+function Friend({ friend, onSelectedFriend, selectedFriend, onDeleteFriend }) {
   const isSelected = friend.id === selectedFriend?.id;
 
   return (
@@ -103,6 +99,9 @@ function Friend({ friend, onSelectedFriend, selectedFriend }) {
       <Balance friend={friend} />
       <Button className="button" onClick={() => onSelectedFriend(friend)}>
         {friend.id === selectedFriend?.id ? "Close" : "Select"}
+      </Button>
+      <Button className="button" onClick={() => onDeleteFriend(friend.id)}>
+        Delete
       </Button>
     </li>
   );
